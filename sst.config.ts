@@ -6,21 +6,23 @@ export default $config({
       name: "aws-bun",
       removal: input?.stage === "production" ? "retain" : "remove",
       home: "aws",
+      aws: {
+        region:
+          input.stage === "production"
+            ? "eu-central-1"
+            : input.stage === "staging"
+            ? "eu-central-1"
+            : "us-east-1",
+        role:
+          input.stage === "production"
+            ? "arn:aws:iam::992382456405:role/AdministratorAccess-eu-central-1"
+            : input.stage === "staging"
+            ? "arn:aws:iam::841199603305:role/AdministratorAccess-eu-central-1"
+            : "arn:aws:iam::730335356413:role/AdministratorAccess-us-east-1",
+      },
     };
   },
   async run() {
     const vpc = new sst.aws.Vpc("MyVpc", {});
-    // const redis = new sst.aws.Redis("MyRedis", { vpc });
-    // const cluster = new sst.aws.Cluster("MyCluster", { vpc });
-
-    // cluster.addService("MyService", {
-    //   link: [redis],
-    //   public: {
-    //     ports: [{ listen: "80/http", forward: "3000/http" }],
-    //   },
-    //   dev: {
-    //     command: "bun dev",
-    //   },
-    // });
   },
 });
